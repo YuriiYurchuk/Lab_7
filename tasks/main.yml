@@ -1,27 +1,10 @@
-- name: Install Nginx
+- name: Install Apache2
   apt:
-    name: "{{ nginx_package }}"
+    name: apache2
     state: present
-  become: true
 
-- name: Copy Nginx configuration file
-  template:
-    src: "{{ nginx_template_file }}"
-    dest: "{{ nginx_config_file }}"
-  notify: Restart Nginx
-
-- name: Ensure Nginx is running
+- name: Ensure Apache2 service is enabled and running
   service:
-    name: "{{ nginx_service }}"
+    name: apache2
     state: started
-    enabled: true
-
-- name: Ensure Nginx configuration is valid
-  command: nginx -t
-  ignore_errors: true
-  register: nginx_config
-
-- name: Reload Nginx configuration if changed
-  command: systemctl reload {{ nginx_service }}
-  when: nginx_config.rc == 0
-  notify: Restart Nginx
+    enabled: yes
